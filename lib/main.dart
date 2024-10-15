@@ -18,11 +18,13 @@ class MyUrbanitoApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: LoginScreen(),
+      // home: HomeScreen(),
       routes: {
         '/map': (context) => MapScreen(),
         '/route_details': (context) => RouteDetailsScreen(),
         '/settings': (context) => SettingsScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }

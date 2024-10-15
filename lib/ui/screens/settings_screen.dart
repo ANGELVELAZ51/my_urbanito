@@ -53,6 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _saveSettings();
               });
             },
+            activeColor: const Color.fromARGB(255, 4, 95, 170),
           ),
           SwitchListTile(
             title: Text('Tema Oscuro'),
@@ -64,6 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               });
               // Aquí deberías implementar la lógica para cambiar el tema en toda la app
             },
+            activeColor: const Color.fromARGB(255, 4, 95, 170),
           ),
           ListTile(
             title: Text('Idioma'),
@@ -103,24 +105,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _saveSettings();
                   });
                 },
+                activeColor: const Color.fromARGB(255, 4, 95, 170),
               ),
             ),
           ),
           ListTile(
             title: Text('Versión de la aplicación'),
             trailing: Text('1.0.0'), // Esto debería obtenerse dinámicamente
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ElevatedButton(
-              child: Text('Cerrar sesión'),
-              onPressed: () {
-                // Aquí iría la lógica para cerrar sesión
-                // Por ejemplo:
-                // AuthService.signOut();
-                // Navigator.of(context).pushReplacementNamed('/login');
-              },
-            ),
           ),
         ],
       ),
