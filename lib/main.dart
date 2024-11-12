@@ -13,13 +13,13 @@ class MyUrbanitoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Urbanito',
+      title: 'Mi Urbanito',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
-      // home: HomeScreen(),
+      // home: LoginScreen(),
+      home: HomeScreen(),
       routes: {
         '/map': (context) => MapScreen(),
         '/route_details': (context) => RouteDetailsScreen(),

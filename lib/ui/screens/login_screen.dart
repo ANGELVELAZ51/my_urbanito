@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/gifmapa.gif'), // Imagen de fondo
+            image: AssetImage('assets/gifmapa.gif'),
             fit: BoxFit.cover,
           ),
         ),
@@ -28,17 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               padding: EdgeInsets.all(16.0),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0), // Borde redondeado
+                borderRadius: BorderRadius.circular(16.0),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: 10.0, sigmaY: 10.0), // Desenfoque
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white
-                          .withOpacity(0.3), // Transparencia del fondo
+                      color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2), // Bordes ligeros
+                        color: Colors.white.withOpacity(0.2),
                       ),
                     ),
                     padding: EdgeInsets.all(16.0),
@@ -102,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             child: Text('¿Olvidaste tu contraseña?'),
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.black, // Texto negro
+                              foregroundColor: Colors.black,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -116,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             child: Text('Crear una cuenta'),
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.black, // Texto negro
+                              foregroundColor: Colors.black,
                             ),
                             onPressed: () {
                               Navigator.push(

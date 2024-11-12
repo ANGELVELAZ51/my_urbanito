@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'; // Importar para el filtro de desenfoque
+import 'dart:ui';
 
 class RegisterScreen extends StatefulWidget {
   @override
