@@ -18,7 +18,6 @@ class MyUrbanitoApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: LoginScreen(),
       home: HomeScreen(),
       routes: {
         '/map': (context) => MapScreen(),

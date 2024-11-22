@@ -1,17 +1,54 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_header.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 
 class HomeScreen extends StatelessWidget {
-  final List<Map<String, String>> rutasEnTransito = [
-    {'origen': 'Centro', 'destino': 'Plaza Mayor', 'hora': '12:30 - 13:00'},
-    {'origen': 'Terminal', 'destino': 'Universidad', 'hora': '12:45 - 13:15'},
-    {'origen': 'Mercado', 'destino': 'Hospital', 'hora': '13:00 - 13:30'},
+  final List<Map<String, dynamic>> rutasEnTransito = [
+    {
+      'origen': 'Universidad UTNG',
+      'destino': 'Centro',
+      'hora': '12:30 - 13:00',
+      'coordsOrigen': LatLng(21.16763, -100.93270),
+      'coordsDestino': LatLng(21.15494, -100.93655)
+    },
+    {
+      'origen': 'Cinepolis',
+      'destino': 'Central',
+      'hora': '12:45 - 13:15',
+      'coordsOrigen': LatLng(21.16006, -100.92914),
+      'coordsDestino': LatLng(21.15494, -100.93655)
+    },
+    {
+      'origen': 'Museo Jose Alfredo',
+      'destino': 'Monumento a los Heroes',
+      'hora': '13:00 - 13:30',
+      'coordsOrigen': LatLng(21.15733, -100.93275),
+      'coordsDestino': LatLng(21.15801, -100.91657)
+    },
   ];
 
-  final List<Map<String, String>> proximasRutas = [
-    {'origen': 'Centro', 'destino': 'Fracc GTO', 'hora': '13:00 - 13:30'},
-    {'origen': 'Plaza', 'destino': 'Terminal', 'hora': '13:15 - 13:45'},
-    {'origen': 'Hospital', 'destino': 'Universidad', 'hora': '13:30 - 14:00'},
+  final List<Map<String, dynamic>> proximasRutas = [
+    {
+      'origen': 'Centro',
+      'destino': 'Fracc GTO',
+      'hora': '13:00 - 13:30',
+      'coordsOrigen': LatLng(21.15494, -100.93655),
+      'coordsDestino': LatLng(21.16763, -100.93270)
+    },
+    {
+      'origen': 'Plaza',
+      'destino': 'Terminal',
+      'hora': '13:15 - 13:45',
+      'coordsOrigen': LatLng(21.16006, -100.92914),
+      'coordsDestino': LatLng(21.15494, -100.93655)
+    },
+    {
+      'origen': 'Hospital',
+      'destino': 'Universidad',
+      'hora': '13:30 - 14:00',
+      'coordsOrigen': LatLng(21.15733, -100.93275),
+      'coordsDestino': LatLng(21.15801, -100.91657)
+    },
   ];
 
   @override
@@ -74,7 +111,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildRouteSection(
     String title,
-    List<Map<String, String>> routes,
+    List<Map<String, dynamic>> routes,
     Color color,
     IconData icon,
     BuildContext context,
@@ -114,16 +151,14 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRouteCard(
-      Map<String, String> route, Color color, BuildContext context) {
+      Map<String, dynamic> route, Color color, BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
           context,
           '/map',
           arguments: {
-            'origen': route['origen'],
-            'destino': route['destino'],
-            'hora': route['hora'],
+            'route': route,
           },
         );
       },
