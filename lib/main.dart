@@ -20,6 +20,7 @@ class MyUrbanitoApp extends StatelessWidget {
       ),
       home: HomeScreen(),
       routes: {
+        '/home': (context) => HomeScreen(),
         '/map': (context) => MapScreen(),
         '/route_details': (context) => RouteDetailsScreen(),
         '/settings': (context) => SettingsScreen(),
