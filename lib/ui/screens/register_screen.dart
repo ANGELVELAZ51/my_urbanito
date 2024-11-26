@@ -140,39 +140,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                             },
                           )
-
-                          // ElevatedButton(
-                          //   child: Text('Registrarse'),
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: Colors.blue,
-                          //     padding: EdgeInsets.symmetric(
-                          //         horizontal: 50, vertical: 15),
-                          //   ),
-                          //   onPressed: () async {
-                          //     _formKey.currentState!.save();
-                          //     if (_formKey.currentState?.validate() == true) {
-                          //       // Usar los valores directamente sin validate()
-                          //       var result = await _auth.createAccount(
-                          //         _name, // Pasa directamente los valores guardados
-                          //         _email,
-                          //         _password,
-                          //       );
-
-                          //       if (result == 1) {
-                          //         Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //             builder: (context) => LoginScreen(),
-                          //           ),
-                          //         );
-                          //       } else if (result == 2) {
-                          //         print('El correo ya existe');
-                          //       } else if (result != null) {
-                          //         Navigator.popAndPushNamed(context, '/login');
-                          //       }
-                          //     }
-                          //   },
-                          // ),
                         ],
                       ),
                     ),
