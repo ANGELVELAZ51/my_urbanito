@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_urbanito/ui/screens/login_screen.dart';
 import 'dart:ui';
 
-import 'package:my_urbanito/utils/auth.dart'; // Importar para el filtro de desenfoque
+import 'package:my_urbanito/utils/auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override

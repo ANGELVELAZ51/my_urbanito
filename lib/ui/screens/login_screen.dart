@@ -63,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/gifmapa.gif'),
+            image: AssetImage('assets/gifmapa.gif'),
             fit: BoxFit.cover,
           ),
         ),
@@ -72,13 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.all(16.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
+                borderRadius: BorderRadius.circular(16.0),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), // Desenfoque
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.3), // Transparencia del fondo
+                      color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
+                        color: Colors.white.withOpacity(0.2),
                         color: Colors.white.withOpacity(0.2),
                       ),
                     ),
@@ -148,6 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text('¿Olvidaste tu contraseña?'),
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.black,
+                              foregroundColor: Colors.black,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -159,6 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             child: Text('Crear una cuenta'),
                             style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
                               foregroundColor: Colors.black,
                             ),
                             onPressed: () {
