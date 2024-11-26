@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'; // Importar para el filtro de desenfoque
+import 'package:my_urbanito/ui/screens/login_screen.dart';
+import 'dart:ui';
+
+import 'package:my_urbanito/utils/auth.dart'; // Importar para el filtro de desenfoque
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -8,6 +11,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
   String _name = '';
   String _email = '';
   String _password = '';
@@ -112,14 +116,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 15),
                             ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                print(
-                                    'Nombre: $_name, Email: $_email, Password: $_password');
+                            onPressed: () async {
+                              _formKey.currentState!.save();
+                              if (_formKey.currentState?.validate() == true) {
+                                var result = await _auth.createAccount(
+                                    _name, // Nombre
+                                    _email, // Correo
+                                    _password // Contraseña
+                                    );
+
+                                if (result == 1) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginScreen(),
+                                    ),
+                                  );
+                                } else if (result == 2) {
+                                  print('El correo ya existe');
+                                } else if (result != null) {
+                                  Navigator.popAndPushNamed(context, '/login');
+                                }
                               }
                             },
-                          ),
+                          )
+
+                          // ElevatedButton(
+                          //   child: Text('Registrarse'),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Colors.blue,
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: 50, vertical: 15),
+                          //   ),
+                          //   onPressed: () async {
+                          //     _formKey.currentState!.save();
+                          //     if (_formKey.currentState?.validate() == true) {
+                          //       // Usar los valores directamente sin validate()
+                          //       var result = await _auth.createAccount(
+                          //         _name, // Pasa directamente los valores guardados
+                          //         _email,
+                          //         _password,
+                          //       );
+
+                          //       if (result == 1) {
+                          //         Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(
+                          //             builder: (context) => LoginScreen(),
+                          //           ),
+                          //         );
+                          //       } else if (result == 2) {
+                          //         print('El correo ya existe');
+                          //       } else if (result != null) {
+                          //         Navigator.popAndPushNamed(context, '/login');
+                          //       }
+                          //     }
+                          //   },
+                          // ),
                         ],
                       ),
                     ),
