@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_header.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
+import 'package:my_urbanito/ui/screens/map_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> rutasEnTransito = [
@@ -154,12 +155,11 @@ class HomeScreen extends StatelessWidget {
       Map<String, dynamic> route, Color color, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
+        Navigator.push(
           context,
-          '/map',
-          arguments: {
-            'route': route,
-          },
+          MaterialPageRoute(
+            builder: (context) => MapScreen(route: route),
+          ),
         );
       },
       child: Container(
