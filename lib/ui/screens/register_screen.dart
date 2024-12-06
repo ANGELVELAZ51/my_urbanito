@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_urbanito/ui/screens/login_screen.dart';
 import 'dart:ui';
-
 import 'package:my_urbanito/utils/auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -12,9 +11,46 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
-  String _name = '';
-  String _email = '';
-  String _password = '';
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Future<void> _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      String name = nameController.text;
+      String email = emailController.text;
+      String password = passwordController.text;
+
+      var result = await _auth.createAccount(name, email, password);
+      if (result is String) {
+        _showToast("Registro exitoso", Colors.green);
+        Navigator.popAndPushNamed(context, '/login');
+      } else if (result == 1) {
+        _showToast("La contraseña es demasiado débil", Colors.blue);
+        passwordController.clear();
+      } else if (result == 2) {
+        _showToast("El correo ya está registrado", Colors.blue);
+        emailController.clear();
+        passwordController.clear();
+      } else {
+        _showToast("Error desconocido", Colors.red);
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+      }
+    }
+  }
+
+  void _showToast(String message, Color backgroundColor) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: backgroundColor,
+      textColor: Colors.white,
+      fontSize: 16.0,
+      timeInSecForIosWeb: 3,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           SizedBox(height: 20),
                           TextFormField(
+                            controller: nameController,
                             decoration: InputDecoration(
                               labelText: 'Nombre completo',
                               prefixIcon: Icon(Icons.person),
@@ -74,10 +111,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _name = value!,
                           ),
                           SizedBox(height: 16),
                           TextFormField(
+                            controller: emailController,
                             decoration: InputDecoration(
                               labelText: 'Correo electrónico',
                               prefixIcon: Icon(Icons.email),
@@ -90,10 +127,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _email = value!,
                           ),
                           SizedBox(height: 16),
                           TextFormField(
+                            controller: passwordController,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
                               prefixIcon: Icon(Icons.lock),
@@ -106,7 +143,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _password = value!,
                           ),
                           SizedBox(height: 24),
                           ElevatedButton(
@@ -116,29 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 15),
                             ),
-                            onPressed: () async {
-                              _formKey.currentState!.save();
-                              if (_formKey.currentState?.validate() == true) {
-                                var result = await _auth.createAccount(
-                                    _name, // Nombre
-                                    _email, // Correo
-                                    _password // Contraseña
-                                    );
-
-                                if (result == 1) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
-                                    ),
-                                  );
-                                } else if (result == 2) {
-                                  print('El correo ya existe');
-                                } else if (result != null) {
-                                  Navigator.popAndPushNamed(context, '/login');
-                                }
-                              }
-                            },
+                            onPressed: _registerUser,
                           )
                         ],
                       ),

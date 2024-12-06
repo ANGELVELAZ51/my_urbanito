@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_urbanito/ui/screens/password_recovery_screen.dart';
 import 'package:my_urbanito/ui/screens/register_screen.dart';
 import 'dart:ui';
-
-import 'package:my_urbanito/utils/auth.dart'; // Importar para la autenticación con correo y contraseña
-import 'package:my_urbanito/utils/auth_google.dart'; // Importar la clase de Google SignIn
+import 'package:my_urbanito/utils/auth.dart';
+import 'package:my_urbanito/utils/auth_google.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,42 +13,43 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
-  final AuthGoogle _authGoogle = AuthGoogle(); // Instancia de AuthGoogle
+  final AuthGoogle _authGoogle = AuthGoogle();
 
   String _email = '';
   String _password = '';
 
-  // Función de inicio de sesión con Google
-  Future<void> _signInWithGoogle() async {
-    try {
-      var user = await _authGoogle.loginGoogle();
-      if (user != null) {
-        // Si el inicio de sesión con Google es exitoso, navega al Home
-        Navigator.popAndPushNamed(context, '/home');
-      } else {
-        // Si falla el inicio de sesión con Google
-        print("Error al iniciar sesión con Google");
-      }
-    } catch (e) {
-      print("Error en loginGoogle: $e");
-    }
-  }
+  // Future<void> _signInWithGoogle() async {
+  //   try {
+  //     var user = await _authGoogle.loginGoogle();
+  //     if (user != null) {
+  //       Navigator.popAndPushNamed(context, '/home');
+  //     } else {
+  //       print("Error al iniciar sesión con Google");
+  //     }
+  //   } catch (e) {
+  //     print("Error en loginGoogle: $e");
+  //   }
+  // }
 
-  // Función de inicio de sesión con correo y contraseña
   Future<void> _signInWithEmailPassword() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      var result = await _auth.singInEmailAndPassword(_email, _password);
+      var result = await _auth.signInEmailAndPassword(_email, _password);
 
-      if (result == 1) {
-        // Inicio de sesión exitoso
+      if (result is String) {
         Navigator.popAndPushNamed(context, '/home');
+      } else if (result == 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Usuario no encontrado')),
+        );
       } else if (result == 2) {
-        // Credenciales incorrectas
-        print('Usuario o contraseña incorrectos');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Contraseña incorrecta')),
+        );
       } else {
-        // Manejo de otros casos de error o éxito
-        print('Error desconocido');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error desconocido')),
+        );
       }
     } else {
       print("Formulario inválido o nulo");
@@ -73,10 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), // Desenfoque
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3), // Transparencia del fondo
+                      color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.2),
@@ -132,17 +132,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             onPressed: _signInWithEmailPassword,
                           ),
-                          SizedBox(height: 16),
-                          // Botón de Google SignIn
-                          ElevatedButton.icon(
-                            onPressed: _signInWithGoogle,
-                            icon: Icon(Icons.login),
-                            label: Text('Iniciar sesión con Google'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 24, 23, 80), // Color del botón
-                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                            ),
-                          ),
+                          // SizedBox(height: 16),
+                          // ElevatedButton.icon(
+                          //   onPressed: _signInWithGoogle,
+                          //   icon: Icon(Icons.login),
+                          //   label: Text('Iniciar sesión con Google'),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: const Color.fromARGB(255, 24, 23, 80),
+                          //     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          //   ),
+                          // ),
                           SizedBox(height: 16),
                           TextButton(
                             child: Text('¿Olvidaste tu contraseña?'),

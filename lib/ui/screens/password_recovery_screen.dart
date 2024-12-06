@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:my_urbanito/utils/auth.dart';
 
 class PasswordRecoveryScreen extends StatefulWidget {
   @override
@@ -8,7 +9,32 @@ class PasswordRecoveryScreen extends StatefulWidget {
 
 class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
   String _email = '';
+
+  Future<void> _sendPasswordResetEmail() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      var result = await _auth.sendPasswordResetEmail(_email);
+      if (result == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Correo de recuperación enviado')),
+        );
+      } else if (result == 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Correo inválido')),
+        );
+      } else if (result == 2) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Usuario no encontrado')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error desconocido')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +105,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 15),
                             ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                print('Enviar instrucciones a: $_email');
-                              }
-                            },
+                            onPressed: _sendPasswordResetEmail,
                           ),
                         ],
                       ),

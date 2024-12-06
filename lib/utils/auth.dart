@@ -3,43 +3,46 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Modificado para aceptar nombre, correo y contraseña
+  // Método para crear una cuenta
   Future<Object?> createAccount(String name, String correo, String pass) async {
     try {
-      // Crear la cuenta con el correo y la contraseña
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: correo,
         password: pass,
       );
-
-      print(userCredential.user); // Mostrar información del usuario creado
-      return userCredential.user?.uid; // Retornar el UID del usuario
+      if (userCredential.user != null) {
+        await userCredential.user?.sendEmailVerification();
+        return userCredential.user?.uid;
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == "weak-password") {
-        print("La contraseña es demasiado débil");
-        return 1; // Representa una contraseña débil
+        return 1; // Contraseña débil
       } else if (e.code == 'email-already-in-use') {
-        print('La cuenta ya existe para ese correo');
-        return 2; // Representa un correo ya en uso
+        return 2; // Correo ya en uso
+      } else if (e.code == 'firebase_email_not_sent') {
+        return 3; // Correo no enviado
       }
     } catch (e) {
       print(e);
-      return 3; // Otro tipo de error
+      return 3; // Otro error
     }
-    return null; // Devuelve null si no se cumple ninguna condición
+    return null;
   }
 
   // Método para iniciar sesión con correo y contraseña
-  Future singInEmailAndPassword(String correo, String pass) async {
+  Future<Object?> signInEmailAndPassword(String correo, String pass) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: correo,
         password: pass,
       );
-
-      final a = userCredential.user;
-      if (a?.uid != null) {
-        return a?.uid;
+      if (userCredential.user != null) {
+        if (userCredential.user!.emailVerified) {
+          return userCredential.user?.uid;
+        } else {
+          return 4; // Correo no verificado
+        }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -48,5 +51,41 @@ class AuthService {
         return 2; // Contraseña incorrecta
       }
     }
+    return null;
+  }
+
+  // Método para enviar un correo de recuperación de contraseña
+  Future<Object?> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return 0; // Éxito
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        return 1; // Correo inválido
+      } else if (e.code == 'user-not-found') {
+        return 2; // Usuario no encontrado
+      }
+    } catch (e) {
+      print(e);
+      return 3; // Otro tipo de error
+    }
+    return null;
+  }
+
+  Future<Object?> resendVerificationEmail() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+      return 0; // Éxito
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return 1; // Usuario no encontrado
+      } else if (e.code == 'invalid-email') {
+        return 2; // Correo inválido
+      }
+    } catch (e) {
+      print(e);
+      return 3; // Otro error
+    }
+    return null;
   }
 }
