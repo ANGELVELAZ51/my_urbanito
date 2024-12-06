@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeader(
-        title: 'Mi Urbanito',
+        title: 'Mi Urbanito', userName: '',
       ),
       body: SingleChildScrollView(
         child: Container(

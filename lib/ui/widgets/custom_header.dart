@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class CustomHeader extends StatefulWidget implements PreferredSizeWidget {
   final String title;
+  final String userName; // Nuevo parámetro para el nombre de usuario
 
   const CustomHeader({
     Key? key,
     required this.title,
+    required this.userName, // Nuevo parámetro requerido
   }) : super(key: key);
 
   @override
@@ -17,8 +19,6 @@ class CustomHeader extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomHeaderState extends State<CustomHeader> {
-  String userName = "Usuario";
-
   void _navigateToSettings() {
     Navigator.pushNamed(context, '/settings');
   }
@@ -81,7 +81,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                 children: [
                   Icon(Icons.person_outline),
                   SizedBox(width: 8),
-                  Text(userName),
+                  Text(widget.userName), // Usamos el nombre de usuario pasado como parámetro
                 ],
               ),
             ),
