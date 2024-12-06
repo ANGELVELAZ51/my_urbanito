@@ -1,33 +1,44 @@
 name: my_urbanito
 description: "A new Flutter project."
 
-# La siguiente línea previene que el paquete sea publicado accidentalmente a pub.dev usando `flutter pub publish`.
-# Esto es preferido para paquetes privados.
-publish_to: "none" # Elimina esta línea si deseas publicar en pub.dev
-
-# Versión y número de compilación para tu aplicación.
 version: 1.0.0+1
 
 environment:
   sdk: ^3.5.3
 
 dependencies:
+  firebase_auth: ^5.3.3
+  google_maps_flutter: ^2.3.0  # Revisa que esta sea la última versión estable
+  flutter_polyline_points: ^1.0.0  # Confirma la versión en pub.dev
+  location: ^7.0.1
+  cupertino_icons: ^1.0.8
+  firebase_core: ^3.8.0
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.8
-  cupertino_icons: ^1.0.8
-  # Google Maps para Flutter
-  google_maps_flutter: ^2.3.0
-  # Para dibujar polilíneas (rutas)
-  flutter_polyline_points: ^1.0.0
-  # Para obtener la ubicación actual
-  location: ^7.0.1
+  google_sign_in: ^6.2.2
 
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dev_dependencies:
+  change_app_package_name: ^1.4.0
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
 
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+# The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
 

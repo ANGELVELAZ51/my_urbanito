@@ -1,11 +1,16 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services'
+
 }
 
+
 android {
-    namespace = "com.example.my_urbanito"
+    namespace = "com.innovation.myurbanito"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,14 +21,20 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        jvmTarget = "1.8"
     }
 
     defaultConfig {
-        applicationId = "com.example.my_urbanito"
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId = "com.innovation.myurbanito"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        60a89f4145ce3ea56094d403037f2a135f418f8b
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -35,4 +46,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation platform('com.google.firebase_firebase-bom:32.7.4')
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
 }

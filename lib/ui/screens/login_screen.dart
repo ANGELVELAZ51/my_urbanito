@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_urbanito/ui/screens/password_recovery_screen.dart';
 import 'package:my_urbanito/ui/screens/register_screen.dart';
-import 'dart:ui'; // Importar para el filtro de desenfoque
+import 'dart:ui';
+
+import 'package:my_urbanito/utils/auth.dart'; // Importar para la autenticación con correo y contraseña
+import 'package:my_urbanito/utils/auth_google.dart'; // Importar la clase de Google SignIn
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,8 +13,48 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
+  final AuthGoogle _authGoogle = AuthGoogle(); // Instancia de AuthGoogle
+
   String _email = '';
   String _password = '';
+
+  // Función de inicio de sesión con Google
+  Future<void> _signInWithGoogle() async {
+    try {
+      var user = await _authGoogle.loginGoogle();
+      if (user != null) {
+        // Si el inicio de sesión con Google es exitoso, navega al Home
+        Navigator.popAndPushNamed(context, '/home');
+      } else {
+        // Si falla el inicio de sesión con Google
+        print("Error al iniciar sesión con Google");
+      }
+    } catch (e) {
+      print("Error en loginGoogle: $e");
+    }
+  }
+
+  // Función de inicio de sesión con correo y contraseña
+  Future<void> _signInWithEmailPassword() async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      var result = await _auth.singInEmailAndPassword(_email, _password);
+
+      if (result == 1) {
+        // Inicio de sesión exitoso
+        Navigator.popAndPushNamed(context, '/home');
+      } else if (result == 2) {
+        // Credenciales incorrectas
+        print('Usuario o contraseña incorrectos');
+      } else {
+        // Manejo de otros casos de error o éxito
+        print('Error desconocido');
+      }
+    } else {
+      print("Formulario inválido o nulo");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), // Desenfoque
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withOpacity(0.3), // Transparencia del fondo
                       borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.2),
@@ -59,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _email = value!,
+                            onSaved: (value) => _email = value ?? '',
                           ),
                           SizedBox(height: 16),
                           TextFormField(
@@ -75,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _password = value!,
+                            onSaved: (value) => _password = value ?? '',
                           ),
                           SizedBox(height: 24),
                           ElevatedButton(
@@ -85,16 +128,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               textStyle: TextStyle(
                                 color: Colors.white,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 50, vertical: 15),
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                             ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                // Aquí iría la lógica de inicio de sesión
-                                print('Email: $_email, Password: $_password');
-                              }
-                            },
+                            onPressed: _signInWithEmailPassword,
+                          ),
+                          SizedBox(height: 16),
+                          // Botón de Google SignIn
+                          ElevatedButton.icon(
+                            onPressed: _signInWithGoogle,
+                            icon: Icon(Icons.login),
+                            label: Text('Iniciar sesión con Google'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 24, 23, 80), // Color del botón
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                            ),
                           ),
                           SizedBox(height: 16),
                           TextButton(
@@ -105,9 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        PasswordRecoveryScreen()),
+                                MaterialPageRoute(builder: (context) => PasswordRecoveryScreen()),
                               );
                             },
                           ),
@@ -119,8 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegisterScreen()),
+                                MaterialPageRoute(builder: (context) => RegisterScreen()),
                               );
                             },
                           ),
