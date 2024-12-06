@@ -158,7 +158,15 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(route: route),
+            builder: (context) => MapScreen(
+              route: {
+                'origen': route['origen'],
+                'destino': route['destino'],
+                'hora': route['hora'],
+                'coordsOrigen': route['coordsOrigen'] ?? LatLng(0, 0),
+                'coordsDestino': route['coordsDestino'] ?? LatLng(0, 0),
+              },
+            ),
           ),
         );
       },
