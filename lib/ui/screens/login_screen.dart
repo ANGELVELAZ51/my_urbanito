@@ -1,9 +1,11 @@
+// login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:my_urbanito/ui/screens/password_recovery_screen.dart';
 import 'package:my_urbanito/ui/screens/register_screen.dart';
 import 'dart:ui';
 import 'package:my_urbanito/utils/auth.dart';
 import 'package:my_urbanito/utils/auth_google.dart';
+import 'package:my_urbanito/ui/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,29 +17,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _auth = AuthService();
   final AuthGoogle _authGoogle = AuthGoogle();
 
-  String _email = '';
-  String _password = '';
-
-  // Future<void> _signInWithGoogle() async {
-  //   try {
-  //     var user = await _authGoogle.loginGoogle();
-  //     if (user != null) {
-  //       Navigator.popAndPushNamed(context, '/home');
-  //     } else {
-  //       print("Error al iniciar sesión con Google");
-  //     }
-  //   } catch (e) {
-  //     print("Error en loginGoogle: $e");
-  //   }
-  // }
+  final TextEditingController _nameController = TextEditingController(); // Controlador para el nombre
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _signInWithEmailPassword() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       _formKey.currentState?.save();
-      var result = await _auth.signInEmailAndPassword(_email, _password);
+      var result = await _auth.signInEmailAndPassword(_emailController.text, _passwordController.text);
 
       if (result is String) {
-        Navigator.popAndPushNamed(context, '/home');
+        // Navegar a HomeScreen y pasar el nombre del usuario
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(userName: _nameController.text),
+          ),
+        );
       } else if (result == 1) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Usuario no encontrado')),
@@ -90,6 +86,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: <Widget>[
                           SizedBox(height: 20),
                           TextFormField(
+                            controller: _nameController, // Controlador para el nombre
+                            decoration: InputDecoration(
+                              labelText: 'Nombre',
+                              prefixIcon: Icon(Icons.person),
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingrese su nombre';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Correo electrónico',
                               prefixIcon: Icon(Icons.email),
@@ -102,10 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _email = value ?? '',
                           ),
                           SizedBox(height: 16),
                           TextFormField(
+                            controller: _passwordController,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
                               prefixIcon: Icon(Icons.lock),
@@ -118,7 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               return null;
                             },
-                            onSaved: (value) => _password = value ?? '',
                           ),
                           SizedBox(height: 24),
                           ElevatedButton(
@@ -132,16 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             onPressed: _signInWithEmailPassword,
                           ),
-                          // SizedBox(height: 16),
-                          // ElevatedButton.icon(
-                          //   onPressed: _signInWithGoogle,
-                          //   icon: Icon(Icons.login),
-                          //   label: Text('Iniciar sesión con Google'),
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: const Color.fromARGB(255, 24, 23, 80),
-                          //     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                          //   ),
-                          // ),
                           SizedBox(height: 16),
                           TextButton(
                             child: Text('¿Olvidaste tu contraseña?'),

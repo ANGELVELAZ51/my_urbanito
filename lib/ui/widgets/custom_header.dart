@@ -8,7 +8,7 @@ class CustomHeader extends StatefulWidget implements PreferredSizeWidget {
   const CustomHeader({
     Key? key,
     required this.title,
-    required this.userName, // Nuevo parámetro requerido
+    required this.userName, required String nameController, // Nuevo parámetro requerido
   }) : super(key: key);
 
   @override

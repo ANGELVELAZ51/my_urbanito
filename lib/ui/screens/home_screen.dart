@@ -1,9 +1,14 @@
+// home_screen.dart
 import 'package:flutter/material.dart';
 import '../widgets/custom_header.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:my_urbanito/ui/screens/map_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  final String userName; // Parámetro para el nombre del usuario
+
+  HomeScreen({required this.userName}); // Constructor que recibe el nombre del usuario
+
   final List<Map<String, dynamic>> rutasEnTransito = [
     {
       'origen': 'Universidad UTNG',
@@ -56,7 +61,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeader(
-        title: 'Mi Urbanito', userName: '',
+        title: 'Mi Urbanito',
+        userName: userName, nameController: '', // Pasar el nombre del usuario a CustomHeader
       ),
       body: SingleChildScrollView(
         child: Container(

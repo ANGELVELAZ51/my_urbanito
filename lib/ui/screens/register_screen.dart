@@ -26,14 +26,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _showToast("Registro exitoso", Colors.green);
         Navigator.popAndPushNamed(context, '/login');
       } else if (result == 1) {
-        _showToast("La contraseña es demasiado débil", Colors.blue);
+        _showToast("La contraseña es demasiado débil", const Color.fromARGB(255, 15, 78, 129));
         passwordController.clear();
       } else if (result == 2) {
-        _showToast("El correo ya está registrado", Colors.blue);
+        _showToast("El correo ya está registrado", const Color.fromARGB(255, 15, 78, 129));
         emailController.clear();
         passwordController.clear();
       } else {
-        _showToast("Error desconocido", Colors.red);
+        _showToast("No se valido el correo", const Color.fromARGB(255, 201, 32, 20));
         nameController.clear();
         emailController.clear();
         passwordController.clear();
