@@ -159,27 +159,54 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildRouteCard(
       Map<String, dynamic> route, Color color, BuildContext context) {
+    // Check if the route is in the active routes list (rutasEnTransito)
+    bool isRouteInTransit = rutasEnTransito.any((transitRoute) =>
+        transitRoute['origen'] == route['origen'] &&
+        transitRoute['destino'] == route['destino']);
+
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MapScreen(
-              route: {
-                'origen': route['origen'],
-                'destino': route['destino'],
-                'hora': route['hora'],
-                'coordsOrigen': route['coordsOrigen'] ?? LatLng(0, 0),
-                'coordsDestino': route['coordsDestino'] ?? LatLng(0, 0),
-              },
+        if (isRouteInTransit) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MapScreen(
+                route: {
+                  'origen': route['origen'],
+                  'destino': route['destino'],
+                  'hora': route['hora'],
+                  'coordsOrigen': route['coordsOrigen'] ?? LatLng(0, 0),
+                  'coordsDestino': route['coordsDestino'] ?? LatLng(0, 0),
+                },
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          // Show dialog for inactive routes
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Ruta no disponible'),
+                content: Text(
+                    'Esta ruta aún no está en ejecución. Por favor, espere o seleccione una ruta en tránsito.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Entendido'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isRouteInTransit ? Colors.white : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -201,7 +228,7 @@ class HomeScreen extends StatelessWidget {
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: color,
+                      color: isRouteInTransit ? color : Colors.grey,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -212,6 +239,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: isRouteInTransit ? Colors.black : Colors.grey,
                       ),
                     ),
                   ),
@@ -222,7 +250,8 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   route['hora']!,
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color:
+                        isRouteInTransit ? Colors.grey[600] : Colors.grey[500],
                     fontSize: 14,
                   ),
                 ),

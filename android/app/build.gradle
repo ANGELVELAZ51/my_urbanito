@@ -29,8 +29,8 @@ android {
         applicationId = "com.innovation.myurbanito"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        60a89f4145ce3ea56094d403037f2a135f418f8b
-        minSdk = flutter.minSdkVersion
+        // 60a89f4145ce3ea56094d403037f2a135f418f8b
+        minSdk = 23  // Change this from flutter.minSdkVersion to 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -49,7 +49,7 @@ flutter {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:32.7.4')  // Note the correct groupId
     implementation 'com.android.support:multidex:1.0.3'
-    implementation platform('com.google.firebase_firebase-bom:32.7.4')
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
 }
