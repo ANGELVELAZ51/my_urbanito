@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'dart:math';
 
 class MapScreen extends StatefulWidget {
   final Map<String, dynamic> route;
@@ -19,8 +20,8 @@ class _MapScreenState extends State<MapScreen> {
   Timer? _movementTimer;
   bool _destinationReached = false;
 
-  // Dynamic route points based on selected route
   List<LatLng> _routePoints = [];
+  int _currentPointIndex = 0;
 
   @override
   void initState() {
@@ -93,27 +94,27 @@ class _MapScreenState extends State<MapScreen> {
 
     // Start at origin
     _currentPosition = _routePoints.first;
-
-    // Simulate vehicle movement
     _startVehicleMovement();
   }
 
   void _startVehicleMovement() {
-    int currentPointIndex = 0;
+    _movementTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (_currentPointIndex < _routePoints.length - 1) {
+        LatLng currentPoint = _routePoints[_currentPointIndex];
+        LatLng nextPoint = _routePoints[_currentPointIndex + 1];
 
-    _movementTimer = Timer.periodic(Duration(seconds: 2), (timer) {
-      if (currentPointIndex < _routePoints.length - 1) {
-        LatLng currentPoint = _routePoints[currentPointIndex];
-        LatLng nextPoint = _routePoints[currentPointIndex + 1];
+        // Calculate direction and distance
+        double dx = nextPoint.longitude - currentPoint.longitude;
+        double dy = nextPoint.latitude - currentPoint.latitude;
+        double distance = sqrt(dx * dx + dy * dy);
+
+        // Move a small fraction towards next point
+        double moveFraction = 0.020; // Adjust for speed
+        double newLat = _currentPosition!.latitude + (dy * moveFraction);
+        double newLng = _currentPosition!.longitude + (dx * moveFraction);
 
         setState(() {
-          // Simple linear interpolation for movement
-          double lat = currentPoint.latitude +
-              (nextPoint.latitude - currentPoint.latitude) * 0.2;
-          double lng = currentPoint.longitude +
-              (nextPoint.longitude - currentPoint.longitude) * 0.2;
-
-          _currentPosition = LatLng(lat, lng);
+          _currentPosition = LatLng(newLat, newLng);
 
           // Update urban vehicle marker
           _markers.removeWhere((marker) => marker.markerId.value == 'vehicle');
@@ -131,15 +132,15 @@ class _MapScreenState extends State<MapScreen> {
           _mapController.animateCamera(
             CameraUpdate.newLatLng(_currentPosition!),
           );
-
-          // Check if we've reached the next point
-          if (_isCloseToPoint(nextPoint)) {
-            currentPointIndex++;
-          }
         });
 
+        // Check if we've reached the next point
+        if (_isCloseToPoint(nextPoint)) {
+          _currentPointIndex++;
+        }
+
         // Stop movement when reached last point
-        if (currentPointIndex == _routePoints.length - 1) {
+        if (_currentPointIndex == _routePoints.length - 1) {
           timer.cancel();
           if (!_destinationReached) {
             _destinationReached = true;
@@ -222,8 +223,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            'Ruta: ${widget.route['origen']} → ${widget.route['destino']}'),
+        title: Text('${widget.route['origen']} → ${widget.route['destino']}'),
       ),
       body: GoogleMap(
         initialCameraPosition: CameraPosition(
